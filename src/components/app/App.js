@@ -5,37 +5,33 @@ import CharInfo from "../charInfo/CharInfo";
 import PropTypes from 'prop-types';
 
 import decoration from '../../resources/img/vision.png';
-import React from 'react';
+import React, { useState } from 'react';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
-class App extends React.Component {
-    state = {
-        selectedChar: null
+const App = () => {
+
+    const [selectedChar, setSelectedChar] = useState(null);
+
+   const onCharSelected = (id) => {
+        setSelectedChar(id);
     }
 
-    onCharSelected = (id) => {
-        this.setState({
-            selectedChar: id
-        })
-    }
-
-    render() {
         return (
             <div className="app">
                 <AppHeader/>
                 <main>
                     <RandomChar/>
                     <div className="char__content">
-                        <CharList onCharSelected={this.onCharSelected}/>
+                        <CharList onCharSelected={onCharSelected}/>
                         <ErrorBoundary>
-                        <CharInfo charId={this.state.selectedChar}/>
+                        <CharInfo charId={selectedChar}/>
                         </ErrorBoundary>
                     </div>
                     <img className="bg-decoration" src={decoration} alt="vision"/>
                 </main>
             </div>
         )
-    }
+    
 }
 
 App.propTypes = {
