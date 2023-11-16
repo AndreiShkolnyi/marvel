@@ -7,6 +7,9 @@ import PropTypes from 'prop-types';
 import decoration from '../../resources/img/vision.png';
 import React, { useState } from 'react';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
+import ComicsList from '../comicsList/ComicsList';
+import AppBanner from '../appBanner/AppBanner';
+import SingleComic from '../singleComic/SingleComic';
 
 const App = () => {
 
@@ -20,6 +23,7 @@ const App = () => {
             <div className="app">
                 <AppHeader/>
                 <main>
+                {/* <AppBanner/> */}
                     <RandomChar/>
                     <div className="char__content">
                         <CharList onCharSelected={onCharSelected}/>
@@ -27,6 +31,8 @@ const App = () => {
                         <CharInfo charId={selectedChar}/>
                         </ErrorBoundary>
                     </div>
+                    {/* <ComicsList/> */}
+                    {/* <SingleComic comicsId={108450}/> */}
                     <img className="bg-decoration" src={decoration} alt="vision"/>
                 </main>
             </div>

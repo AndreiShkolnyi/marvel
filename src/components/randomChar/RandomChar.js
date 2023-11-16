@@ -1,18 +1,15 @@
-import { Component, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
-
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
+import useMarvelService from '../../services/MarvelService';
 
 const RandomChar = () => {
 
     const [char, setChar] = useState({});
-    const [isLoading, setLoading] = useState(true);
-    const [isError, setError] = useState(false);
 
-   const  marvelService = new MarvelService();
+   const {isLoading, error, getCharacter, clearError} = useMarvelService();
 
     useEffect(() => {
         updateChar()
@@ -20,26 +17,16 @@ const RandomChar = () => {
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
     }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    }
-
     const updateChar = () => {
-        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        setLoading(true);
-        marvelService
-            .getCharacter(id)
-            .then(onCharLoaded)
-            .catch(onError);
+        clearError();
+        const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);        
+        getCharacter(id).then(onCharLoaded);
     }
 
-        const errorMessage = isError ? <ErrorMessage/> : null;
+        const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = isLoading ? <Spinner/> : null;
-        const content = !(isLoading || isError) ? <View char={char}/> : null;
+        const content = !(isLoading || error) ? <View char={char}/> : null;
 
         return (
             <div className="randomchar">
@@ -65,10 +52,13 @@ const RandomChar = () => {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
-    const emptyStyle = thumbnail.includes('image_not_available') ? 'randomchar__img__not-available' : 'randomchar__img'
+    const imgStyle = {'objectFit' : 'cover'};
+    if (thumbnail === 'http://i.anihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+        imgStyle = {'objectFit' : 'contain'};
+    }
     return (
         <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className={emptyStyle}/>
+            <img src={thumbnail} alt="Random character" className='randomchar__img' style={imgStyle}/>
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">
