@@ -1,25 +1,23 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo} from 'react';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
+import useMarvelService from '../../services/MarvelService';
+
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './charList.scss';
-import useMarvelService from '../../services/MarvelService';
+
 
 const setContent = (process, Component, isNewItemLoading) => {
 
     switch (process) {
         case 'waiting' : 
             return <Spinner/>;
-            break;
         case 'loading' : 
             return isNewItemLoading ? <Component/> : <Spinner/>;
-            break;
         case 'confirmed' : 
             return <Component/>;
-            break;
         case 'error' : 
             return <ErrorMessage/>;
-            break;
         default :
             throw new Error('Unexpected pocess state');
     }
@@ -30,7 +28,6 @@ const CharList = (props) => {
     const [offset, setOffset] = useState(210);
     const [isCharEnded, setCharEnded] = useState(false);
     const [charList, setCharList] = useState([]);
-
     const {getAllCharacters, process, setProcess} = useMarvelService();
 
     useEffect(() => {
@@ -102,19 +99,20 @@ const CharList = (props) => {
         )
     }
 
-        return (
-            <div className="char__list">
-               {setContent(process, () => renderItems(charList), isNewItemLoading)}
-                <button 
-                className="button button__main button__long"
-                disabled={isNewItemLoading}
-                style={{'display' : isCharEnded ? 'none' : 'block'}}
-                onClick={() => onRequest(offset)}
-                >
-                    <div className="inner">load more</div>
-                </button>
-            </div>
-        )
+    const elements = useMemo(() => setContent(process, () => renderItems(charList), isNewItemLoading), [process]);
+
+    return (
+        <div className="char__list">
+            {elements}
+            <button 
+            className="button button__main button__long"
+            disabled={isNewItemLoading}
+            style={{'display' : isCharEnded ? 'none' : 'block'}}
+            onClick={() => onRequest(offset)}>
+                <div className="inner">load more</div>
+            </button>
+        </div>      
+    )    
     
 }
 

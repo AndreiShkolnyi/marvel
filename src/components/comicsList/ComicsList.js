@@ -10,16 +10,12 @@ const setContent = (process, Component, isNewItemLoading) => {
     switch (process) {
         case 'waiting' : 
             return <Spinner/>;
-            break;
         case 'loading' : 
             return isNewItemLoading ? <Component/> : <Spinner/>;
-            break;
         case 'confirmed' : 
             return <Component/>;
-            break;
         case 'error' : 
             return <ErrorMessage/>;
-            break;
         default :
             throw new Error('Unexpected pocess state');
     }
@@ -37,7 +33,6 @@ const ComicsList = () => {
     useEffect(() => {
         onRequest(offset, true);
     }, []); 
-
 
     const onRequest = (offset, initial) => {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);

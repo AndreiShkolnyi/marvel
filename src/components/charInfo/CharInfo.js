@@ -16,9 +16,7 @@ const CharInfo = (props) => {
 
     const updateChar = () => {
         const {charId} = props;
-        if (!charId) {
-            return;
-        }
+        if (!charId) return;
 
         clearError();
         getCharacter(charId)
@@ -45,9 +43,8 @@ const View = ({data}) => {
     const emptyStyle = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : {objectFit: 'cover'};
     const comicsList = comics.length === 0 ? 'Comics are not available' : comics.map(({name,resourceURI}, i) => {
         const comicsId = resourceURI.replace('http://gateway.marvel.com/v1/public/comics/', '');
-        if (i >= 10) {
-            return;
-        }
+        if (i >= 10) return;
+        
         return (
             <li key={i} className="char__comics-item">
             <Link to={`/comics/${comicsId}`}>{name}</Link>
