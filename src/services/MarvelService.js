@@ -30,7 +30,7 @@ const useMarvelService = () => {
         }
     }
 
-    const getAllComics = async (offset = _baseOffset) => {
+    const getAllComics = async (offset = 240) => {
         const res = await request(`${_apiBase}comics?limit=8&offset=${offset}&${_apiKey}`);
         return res.data.results.map(_transformComics);
     }
@@ -44,11 +44,15 @@ const useMarvelService = () => {
         return {
             id: comics.id,
             name: comics.title,
-            description: comics.description,
+            description: comics.description || "There is no description",
             thumbnail: comics.thumbnail.path + '.' + comics.thumbnail.extension,
-            price: comics.prices[0].price,
-            pageCount: comics.pageCount,
-            language: comics.language
+            price: comics.prices[0].price
+            ? `${comics.prices[0].price}$`
+            : "not available",
+            pageCount: comics.pageCount
+            ? `${comics.pageCount} p.`
+            : "No information about the number of pages",
+            language: comics.textObjects[0]?.language || "en-us",
             
         }
     }

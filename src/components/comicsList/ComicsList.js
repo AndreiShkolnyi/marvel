@@ -25,7 +25,7 @@ const ComicsList = () => {
 
     const [comicsList, setComicsList] = useState([]);
     const [isNewItemLoading, setNewItemLoading] = useState(false);
-    const [offset, setOffset] = useState(0);
+    const [offset, setOffset] = useState(240);
     const [isComicsEnded, setComicsEnded] = useState(false);
 
     const {getAllComics, process, setProcess} = useMarvelService();
@@ -50,7 +50,7 @@ const ComicsList = () => {
 
         setComicsList([...comicsList, ...newComicsList]);
         setNewItemLoading(false);
-        setOffset((offset) => offset + 8);
+        setOffset(offset + 8);
         setComicsEnded(ended);
     }
 
@@ -69,7 +69,7 @@ const ComicsList = () => {
                 <Link to={`/comics/${item.id}`}>
                     <img src={item.thumbnail} alt={item.title} className="comics__item-img" style={imgStyle}/>
                     <div className="comics__item-name">{item.title}</div>
-                    <div className="comics__item-price">{item.price}$</div>
+                    <div className="comics__item-price">{item.price}</div>
                 </Link>
             </li>
             )
