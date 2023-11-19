@@ -1,16 +1,14 @@
 import './charInfo.scss';
 import {useState, useEffect} from 'react';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Skeleton from '../skeleton/Skeleton';
 import useMarvelService from '../../services/MarvelService';
 import { Link } from 'react-router-dom';
+import setContent from '../../utils/setContent';
 
 const CharInfo = (props) => {
     
     const [char, setChar] = useState(null);
 
-    const {isLoading, error, getCharacter, clearError} = useMarvelService();
+    const {getCharacter, clearError, process, setProcess} = useMarvelService();
 
    useEffect(() => {
     updateChar();
@@ -24,7 +22,8 @@ const CharInfo = (props) => {
 
         clearError();
         getCharacter(charId)
-        .then(onCharLoaded);
+        .then(onCharLoaded)
+        .then(() => setProcess('confirmed'));
 
     }
 
@@ -32,24 +31,17 @@ const CharInfo = (props) => {
         setChar(char);
     }
 
-        const skeleton = char || error || isLoading ? null : <Skeleton/>;
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = isLoading ? <Spinner/> : null;
-        const content = !(isLoading || error || !char) ?  <View char={char}/> : null;
 
         return (
             <div className="char__info">
-                {skeleton}
-                {spinner}
-                {errorMessage}
-                {content}
+               {setContent(process, View , char)}
             </div>
         )
     
 }
 
-const View = ({char}) => {
-    const {name, description, thumbnail, wiki, homepage, comics} = char;
+const View = ({data}) => {
+    const {name, description, thumbnail, wiki, homepage, comics} = data;
     const emptyStyle = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : {objectFit: 'cover'};
     const comicsList = comics.length === 0 ? 'Comics are not available' : comics.map(({name,resourceURI}, i) => {
         const comicsId = resourceURI.replace('http://gateway.marvel.com/v1/public/comics/', '');
