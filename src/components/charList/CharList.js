@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './charList.scss';
@@ -9,6 +10,7 @@ const CharList = (props) => {
     const [offset, setOffset] = useState(210);
     const [isCharEnded, setCharEnded] = useState(false);
     const [charList, setCharList] = useState([]);
+    const [toggle, setToggle] = useState(false);
 
     const {isLoading, error, getAllCharacters} = useMarvelService();
 
@@ -25,11 +27,11 @@ const CharList = (props) => {
     const onCharListLoaded = (newCharList) => {
         let ended = false;
 
-        if (newCharList.length <= 8) {
+        if (newCharList.length < 9) {
             ended = true;
         }
 
-        setCharList((charList) => [...charList, ...newCharList]);
+        setCharList([...charList, ...newCharList]);
         setNewItemLoading(false);
         setOffset((offset) => offset + 9);
         setCharEnded(isCharEnded => ended);
@@ -51,7 +53,12 @@ const CharList = (props) => {
             }
             
             return (
-                <li 
+               <CSSTransition
+               key={item.id}
+               timeout={300}
+               classNames='char__item'
+               >
+                 <li 
                     className="char__item"
                     key={item.id}
                     tabIndex={0}
@@ -59,17 +66,19 @@ const CharList = (props) => {
                     onClick={() => {
                         props.onCharSelected(item.id);
                         focusOnItem(i);
-                    }}
-                    >
+                }}>
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                         <div className="char__name">{item.name}</div>
                 </li>
+               </CSSTransition>
             )
         });
         return (
-            <ul className="char__grid">
-                {items}
-            </ul>
+                <ul className="char__grid">
+                    <TransitionGroup component={null}>
+                        {items}
+                    </TransitionGroup>
+                </ul>
         )
     }
 

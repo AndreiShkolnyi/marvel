@@ -4,6 +4,7 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
 import useMarvelService from '../../services/MarvelService';
+import { Link } from 'react-router-dom';
 
 const CharInfo = (props) => {
     
@@ -50,13 +51,14 @@ const CharInfo = (props) => {
 const View = ({char}) => {
     const {name, description, thumbnail, wiki, homepage, comics} = char;
     const emptyStyle = thumbnail.includes('image_not_available') ? {objectFit: 'contain'} : {objectFit: 'cover'};
-    const comicsList = comics.length === 0 ? 'Comics are not available' : comics.map(({name}, i) => {
+    const comicsList = comics.length === 0 ? 'Comics are not available' : comics.map(({name,resourceURI}, i) => {
+        const comicsId = resourceURI.replace('http://gateway.marvel.com/v1/public/comics/', '');
         if (i >= 10) {
             return;
         }
         return (
             <li key={i} className="char__comics-item">
-                {name}
+            <Link to={`/comics/${comicsId}`}>{name}</Link>
             </li>
         )
     })
