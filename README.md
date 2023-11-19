@@ -1,6 +1,8 @@
 
 # Marvel
 
+Direct link: https://my-marvel-list.onrender.com/
+
 ![my-marvel-list onrender com_](https://github.com/volodin32104/marvel/assets/34587236/0ba8797b-a01d-4fa5-b7bd-f8f62536afc6)
 
 
